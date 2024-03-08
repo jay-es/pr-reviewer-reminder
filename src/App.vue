@@ -1,8 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const notificationAllowed = ref(false);
+Notification.requestPermission((permission) => {
+  notificationAllowed.value = permission === 'granted';
+});
+</script>
 
 <template>
-  <header>
-    <h1 class="p-4 text-center text-3xl">PR Reviewer Reminder</h1>
+  <header class="text-center">
+    <h1 class="p-4 text-3xl">PR Reviewer Reminder</h1>
+    <div v-if="!notificationAllowed" class="font-bold text-error">
+      Browser notifications are not allowed!!
+    </div>
   </header>
 
   <main class="mx-auto w-full max-w-sm px-4">
