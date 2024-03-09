@@ -1,5 +1,11 @@
 # pr-reviewer-reminder
 
+### assets
+
+- favicon: https://www.svgrepo.com/svg/494015/remind
+
+---
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
