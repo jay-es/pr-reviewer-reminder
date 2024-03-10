@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core';
-import { ref } from 'vue';
 import { useCheckPulls } from './composables/useCheckPulls';
 import { useInterval } from './composables/useInterval';
+import { useNotificationPermission } from './composables/useNotificationPermission';
 import ReposInput from './conponents/ReposInput.vue';
 
 const account = useLocalStorage('pr-rr-account', '');
@@ -11,11 +11,7 @@ const pat = useLocalStorage('pr-rr-pat', '');
 
 const { pulls, exec } = useCheckPulls(account, reposText, pat);
 const { restText, reset } = useInterval(20, exec);
-
-const notificationAllowed = ref(false);
-Notification.requestPermission((permission) => {
-  notificationAllowed.value = permission === 'granted';
-});
+const notificationPermission = useNotificationPermission();
 </script>
 
 <template>
@@ -25,7 +21,7 @@ Notification.requestPermission((permission) => {
 
   <main class="mx-auto w-full max-w-sm px-4">
     <div
-      v-if="!notificationAllowed"
+      v-if="notificationPermission !== 'granted'"
       class="mb-4 rounded-md border border-error/35 bg-error/10 px-6 py-4 text-sm"
     >
       Browser notifications are not allowed.
