@@ -4,21 +4,19 @@
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {
-      colors: {
-        muted: '#656d76',
-      },
-    },
+    extend: {},
   },
   daisyui: {
     themes: [
       {
-        mytheme: {
-          primary: '#1f883d',
-          'primary-content': '#fff',
-          secondary: '#0969da',
-          'base-100': '#ffffff',
-          'base-content': '#1f2328',
+        'github-light': {
+          primary: '#1f883d', // --color-btn-primary-bg
+          'primary-content': '#ffffff', // --color-btn-primary-text
+          secondary: '#656d76', // --color-fg-muted
+          accent: '#0969da', // --color-accent-fg
+          'base-100': '#ffffff', // --color-canvas-default
+          'base-content': '#1f2328', // --color-fg-default
+          error: '#fa4549', // --color-checks-donut-error
         },
       },
     ],

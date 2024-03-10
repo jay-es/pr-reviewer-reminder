@@ -26,15 +26,21 @@ Notification.requestPermission((permission) => {
 </script>
 
 <template>
-  <header class="text-center">
-    <h1 class="p-4 text-3xl">PR Reviewer Reminder</h1>
-    <div v-if="!notificationAllowed" class="font-bold text-error">
-      Browser notifications are not allowed!!
-    </div>
+  <header class="mb-4 text-center">
+    <h1 class="p-4 text-3xl font-light">PR Reviewer Reminder</h1>
   </header>
 
   <main class="mx-auto w-full max-w-sm px-4">
-    <form class="flex flex-col gap-y-4" @submit.prevent="reset(), exec()">
+    <div
+      v-if="!notificationAllowed"
+      class="mb-4 rounded-md border border-error/35 bg-error/10 px-6 py-4 text-sm"
+    >
+      Browser notifications are not allowed.
+    </div>
+    <form
+      class="flex flex-col gap-y-4 rounded-md border border-gray-300 bg-gray-100 p-4 pt-2"
+      @submit.prevent="reset(), exec()"
+    >
       <label class="form-control">
         <div class="label">
           <span class="label-text">GitHub account</span>
@@ -52,7 +58,7 @@ Notification.requestPermission((permission) => {
         <div class="label">
           <span class="label-text">
             owner/repo
-            <span class="text-muted label-text-alt">
+            <span class="label-text-alt text-secondary">
               (accepts multiple values by line breaks)
             </span>
           </span>
@@ -70,7 +76,9 @@ Notification.requestPermission((permission) => {
         <div class="label">
           <span class="label-text">
             personal access token
-            <span class="text-muted label-text-alt">(for private repos)</span>
+            <span class="label-text-alt text-secondary">
+              (for private repos)
+            </span>
           </span>
         </div>
         <input
@@ -92,7 +100,7 @@ Notification.requestPermission((permission) => {
           :href="pr.url"
           target="_blank"
           rel="noopener noreferrer"
-          class="link link-secondary"
+          class="link link-accent"
         >
           {{ pr.url }}
         </a>
