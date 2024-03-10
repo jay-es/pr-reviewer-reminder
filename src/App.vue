@@ -2,6 +2,7 @@
 import { useLocalStorage } from '@vueuse/core';
 import { computed, ref, watchEffect } from 'vue';
 import { useCheckPulls } from './composables/useCheckPulls';
+import { useInterval } from './composables/useInterval';
 
 const account = useLocalStorage('pr-rr-account', '');
 const reposText = useLocalStorage('pr-rr-repos', '');
@@ -9,6 +10,7 @@ const pat = useLocalStorage('pr-rr-pat', '');
 
 const repos = computed(() => reposText.value.split('\n'));
 const { pulls, exec } = useCheckPulls(account, repos, pat);
+const { restText, reset } = useInterval(20, exec);
 
 const reposRef = ref<HTMLTextAreaElement>();
 watchEffect(() => {
@@ -32,7 +34,7 @@ Notification.requestPermission((permission) => {
   </header>
 
   <main class="mx-auto w-full max-w-sm px-4">
-    <form class="flex flex-col gap-y-4" @submit.prevent="exec">
+    <form class="flex flex-col gap-y-4" @submit.prevent="reset(), exec()">
       <label class="form-control">
         <div class="label">
           <span class="label-text">GitHub account</span>
@@ -78,7 +80,9 @@ Notification.requestPermission((permission) => {
         />
       </label>
 
-      <button class="btn btn-primary btn-sm mt-4">Check now</button>
+      <button class="btn btn-primary btn-sm mt-4 tabular-nums">
+        Check now (Auto exec in remaining {{ restText }})
+      </button>
     </form>
 
     <ul class="mt-6 list-disc space-y-4 break-all pl-6">
