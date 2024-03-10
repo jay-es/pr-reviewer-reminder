@@ -4,6 +4,7 @@ import { useCheckPulls } from './composables/useCheckPulls';
 import { useInterval } from './composables/useInterval';
 import { useNotificationPermission } from './composables/useNotificationPermission';
 import ReposInput from './conponents/ReposInput.vue';
+import UsageDialog from './conponents/UsageDialog.vue';
 
 const account = useLocalStorage('pr-rr-account', '');
 const reposText = useLocalStorage('pr-rr-repos', '');
@@ -15,11 +16,12 @@ const notificationPermission = useNotificationPermission();
 </script>
 
 <template>
-  <header class="mb-4 text-center">
-    <h1 class="p-4 text-3xl font-light">PR Reviewer Reminder</h1>
+  <header class="relative mb-4">
+    <h1 class="p-4 text-center text-2xl font-light">PR Reviewer Reminder</h1>
+    <UsageDialog />
   </header>
 
-  <main class="mx-auto w-full max-w-sm px-4">
+  <main>
     <div
       v-if="notificationPermission !== 'granted'"
       class="mb-4 rounded-md border border-error/35 bg-error/10 px-6 py-4 text-sm"
@@ -71,9 +73,10 @@ const notificationPermission = useNotificationPermission();
         />
       </label>
 
-      <button class="btn btn-primary btn-sm mt-4 tabular-nums">
-        Check now (Auto exec in remaining {{ restText }})
-      </button>
+      <p class="-mb-2 text-center tabular-nums">
+        Auto check in remaining {{ restText }}
+      </p>
+      <button class="btn btn-primary btn-sm">Check now manually</button>
     </form>
 
     <ul class="mt-6 list-disc space-y-4 break-all pl-6">

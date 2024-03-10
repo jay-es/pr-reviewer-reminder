@@ -8,4 +8,5 @@
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans',
     Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  @apply mx-auto w-full max-w-sm px-4;
 }
