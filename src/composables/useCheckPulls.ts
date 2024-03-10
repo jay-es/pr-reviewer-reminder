@@ -32,16 +32,18 @@ async function checkPulls(
 
 export function useCheckPulls(
   account: Ref<string>,
-  repos: Ref<string[]>,
+  reposText: Ref<string>,
   pat: Ref<string>,
 ): {
   pulls: Ref<readonly PR[]>;
   exec: () => Promise<void>;
 } {
   const pulls = ref<PR[]>([]);
+
   async function exec() {
+    const repos = reposText.value.split('\n');
     const res = await Promise.all(
-      repos.value.map((repo) => checkPulls(account.value, repo, pat.value)),
+      repos.map((repo) => checkPulls(account.value, repo, pat.value)),
     );
     pulls.value = res.flat();
 

@@ -1,23 +1,16 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core';
-import { computed, ref, watchEffect } from 'vue';
+import { ref } from 'vue';
 import { useCheckPulls } from './composables/useCheckPulls';
 import { useInterval } from './composables/useInterval';
+import ReposInput from './conponents/ReposInput.vue';
 
 const account = useLocalStorage('pr-rr-account', '');
 const reposText = useLocalStorage('pr-rr-repos', '');
 const pat = useLocalStorage('pr-rr-pat', '');
 
-const repos = computed(() => reposText.value.split('\n'));
-const { pulls, exec } = useCheckPulls(account, repos, pat);
+const { pulls, exec } = useCheckPulls(account, reposText, pat);
 const { restText, reset } = useInterval(20, exec);
-
-const reposRef = ref<HTMLTextAreaElement>();
-watchEffect(() => {
-  const isValidRepo = (str: string) => /^[^/]+\/[^/]+$/.exec(str);
-  const validity = !repos.value.length || repos.value.every(isValidRepo);
-  reposRef.value?.setCustomValidity(validity ? '' : 'invalid format');
-});
 
 const notificationAllowed = ref(false);
 Notification.requestPermission((permission) => {
@@ -63,13 +56,7 @@ Notification.requestPermission((permission) => {
             </span>
           </span>
         </div>
-        <textarea
-          ref="reposRef"
-          v-model.trim="reposText"
-          class="textarea textarea-bordered textarea-sm h-24 leading-normal invalid:textarea-error"
-          :placeholder="`nodejs/node\nmicrosoft/TypeScript`"
-          required
-        ></textarea>
+        <ReposInput v-model="reposText" />
       </label>
 
       <label class="form-control">
