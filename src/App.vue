@@ -93,7 +93,7 @@ const notificationPermission = useNotificationPermission();
 
     <ul class="mt-6 list-disc space-y-4 break-all pl-6">
       <li v-for="pr in pulls" :key="pr.url">
-        {{ pr.title }}<br />
+        <div :class="pr.error && 'text-error'">{{ pr.title }}</div>
         <a
           :href="pr.url"
           target="_blank"

@@ -4,6 +4,7 @@ import soundUrl from '@/assets/maou_se_onepoint09.mp3';
 type PR = {
   url: string;
   title: string;
+  error?: boolean;
 };
 
 async function checkPulls(
@@ -11,24 +12,33 @@ async function checkPulls(
   repo: string,
   pat: string,
 ): Promise<PR[]> {
-  const pulls: any[] = await fetch(
-    `https://api.github.com/repos/${repo}/pulls`,
-    {
-      headers: {
-        Authorization: pat ? `Bearer ${pat}` : '',
-      },
+  return fetch(`https://api.github.com/repos/${repo}/pulls`, {
+    headers: {
+      Authorization: pat && `Bearer ${pat}`,
     },
-  ).then((res) => (res.ok ? res.json() : []));
+  }).then(async (res) => {
+    const result = await res.json();
 
-  return pulls
-    .filter(
-      (pr) =>
-        pr.state === 'open' &&
-        pr.draft === false &&
-        pr.requested_reviewers.length === 0 &&
-        pr.user.login === account,
-    )
-    .map(({ html_url, title }) => ({ url: html_url, title }));
+    if (res.ok && Array.isArray(result)) {
+      return result
+        .filter(
+          (pr) =>
+            pr.state === 'open' &&
+            pr.draft === false &&
+            pr.requested_reviewers.length === 0 &&
+            pr.user.login === account,
+        )
+        .map(({ html_url, title }): PR => ({ url: html_url, title }));
+    }
+
+    return [
+      {
+        url: res.url,
+        title: `${res.status} (${result.message})`,
+        error: true,
+      } satisfies PR,
+    ];
+  });
 }
 
 export function useCheckPulls(
@@ -44,6 +54,8 @@ export function useCheckPulls(
 
   async function exec() {
     pulls.value = [];
+
+    if (!reposText.value) return;
 
     const repos = reposText.value.split('\n');
     const res = await Promise.all(
