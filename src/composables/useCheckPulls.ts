@@ -1,4 +1,5 @@
 import { type Ref, ref } from 'vue';
+import soundUrl from '@/assets/maou_se_onepoint09.mp3';
 
 type PR = {
   url: string;
@@ -34,6 +35,7 @@ export function useCheckPulls(
   account: Ref<string>,
   reposText: Ref<string>,
   pat: Ref<string>,
+  soundEnabled: Ref<boolean>,
 ): {
   pulls: Ref<readonly PR[]>;
   exec: () => Promise<void>;
@@ -41,6 +43,8 @@ export function useCheckPulls(
   const pulls = ref<PR[]>([]);
 
   async function exec() {
+    pulls.value = [];
+
     const repos = reposText.value.split('\n');
     const res = await Promise.all(
       repos.map((repo) => checkPulls(account.value, repo, pat.value)),
@@ -49,8 +53,14 @@ export function useCheckPulls(
 
     if (pulls.value.length) {
       new Notification('PR Reviewer Reminder', {
-        body: 'Forget to set reviewers?',
+        body: 'Forgot to set reviewers?',
       });
+
+      if (soundEnabled.value) {
+        const audio = new Audio(soundUrl);
+        audio.volume = 0.25;
+        audio.play();
+      }
     }
   }
 

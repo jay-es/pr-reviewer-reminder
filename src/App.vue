@@ -9,8 +9,9 @@ import UsageDialog from './conponents/UsageDialog.vue';
 const account = useLocalStorage('pr-rr-account', '');
 const reposText = useLocalStorage('pr-rr-repos', '');
 const pat = useLocalStorage('pr-rr-pat', '');
+const soundEnabled = useLocalStorage('pr-sound-enabled', false);
 
-const { pulls, exec } = useCheckPulls(account, reposText, pat);
+const { pulls, exec } = useCheckPulls(account, reposText, pat, soundEnabled);
 const { restText, reset } = useInterval(20, exec);
 const notificationPermission = useNotificationPermission();
 </script>
@@ -72,6 +73,17 @@ const notificationPermission = useNotificationPermission();
           class="input input-sm input-bordered invalid:input-error"
         />
       </label>
+
+      <div>
+        <label class="label inline-flex cursor-pointer gap-x-2">
+          <input
+            v-model="soundEnabled"
+            type="checkbox"
+            class="checkbox-accent checkbox checkbox-xs rounded-[3px]"
+          />
+          <span class="label-text">Notify with sound</span>
+        </label>
+      </div>
 
       <p class="-mb-2 text-center tabular-nums">
         Auto check in remaining {{ restText }}
