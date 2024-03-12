@@ -52,6 +52,7 @@ onMounted(() => {
             <li>Not a draft</li>
             <li>Created by you</li>
             <li>Reviewers are not assigned</li>
+            <li>Not yet reviewed</li>
           </ul>
         </li>
         <li>
