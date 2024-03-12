@@ -1,5 +1,6 @@
 import { type Ref, ref } from 'vue';
 import soundUrl from '@/assets/maou_se_onepoint09.mp3';
+import type { GH } from '@/types';
 
 type PR = {
   url: string;
@@ -19,13 +20,13 @@ async function checkPulls(
   };
   const pullsUrl = `https://api.github.com/repos/${repo}/pulls`;
   const pullsRes = await fetch(pullsUrl, fetchOptions);
-  const pulls = await pullsRes.json();
+  const pulls: GH.PullRequest[] | GH.Error = await pullsRes.json();
 
   if (!pullsRes.ok || !Array.isArray(pulls)) {
     return [
       {
         url: pullsRes.url,
-        title: `${pullsRes.status} (${pulls.message})`,
+        title: `${pullsRes.status} (${(pulls as GH.Error).message})`,
         error: true,
       } satisfies PR,
     ];
@@ -43,8 +44,8 @@ async function checkPulls(
       ...pr,
       reviews: await fetch(`${pullsUrl}/${pr.number}/reviews`, fetchOptions)
         .then((res) => res.json())
-        .then((reviews: any[]) =>
-          reviews.filter((review) => review.user.login !== account),
+        .then((reviews: GH.Review[]) =>
+          reviews.filter((v) => v.user.login !== account),
         ),
     })),
   );
