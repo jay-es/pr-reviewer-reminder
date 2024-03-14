@@ -3,6 +3,7 @@ import { useLocalStorage } from '@vueuse/core';
 import { useCheckPulls } from './composables/useCheckPulls';
 import { useInterval } from './composables/useInterval';
 import { useNotificationPermission } from './composables/useNotificationPermission';
+import PatInput from './conponents/PatInput.vue';
 import ReposInput from './conponents/ReposInput.vue';
 import UsageDialog from './conponents/UsageDialog.vue';
 
@@ -67,11 +68,7 @@ const notificationPermission = useNotificationPermission();
             </span>
           </span>
         </div>
-        <input
-          v-model="pat"
-          type="text"
-          class="input input-sm input-bordered invalid:input-error"
-        />
+        <PatInput v-model="pat" />
       </label>
 
       <div>
